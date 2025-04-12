@@ -44,6 +44,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -476,6 +477,9 @@ public class RangerRESTClient {
 				finalResponse = webResource.accept(RangerRESTUtils.REST_EXPECTED_MIME_TYPE).type(RangerRESTUtils.REST_MIME_TYPE_JSON).get(ClientResponse.class);
 
 				if (finalResponse != null) {
+					if (finalResponse.getStatusInfo().getFamily() == Response.Status.Family.SERVER_ERROR) {
+						throw new ClientHandlerException("Response status: " + finalResponse.getStatus());
+					}
 					setLastKnownActiveUrlIndex(currentIndex);
 					break;
 				}
@@ -506,6 +510,9 @@ public class RangerRESTClient {
 				finalResponse = br.accept(RangerRESTUtils.REST_EXPECTED_MIME_TYPE).type(RangerRESTUtils.REST_MIME_TYPE_JSON).get(ClientResponse.class);
 
 				if (finalResponse != null) {
+					if (finalResponse.getStatusInfo().getFamily() == Response.Status.Family.SERVER_ERROR) {
+						throw new ClientHandlerException("Response status: " + finalResponse.getStatus());
+					}
 					setLastKnownActiveUrlIndex(currentIndex);
 					break;
 				}
